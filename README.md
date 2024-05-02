@@ -47,6 +47,8 @@ npm install
 npm run dev
 ```
 ## Screenshots
+![Screenshot (268)](https://github.com/2126ReshmaB/MERN-BOOK-APP/assets/118461173/750ec09a-4cae-406b-8fea-a43032d10472)
+
 
  ![Screenshot (267)](https://github.com/2126ReshmaB/MERN-BOOK-APP/assets/118461173/1805688e-ade5-4c0b-b293-428dfc43b21e)
 ![Screenshot (255)](https://github.com/2126ReshmaB/MERN-BOOK-APP/assets/118461173/132627f0-4baa-4468-a7fa-70746a9c2c7f)
