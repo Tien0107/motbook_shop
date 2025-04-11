@@ -1,124 +1,34 @@
-const express = require('express')
-const app = express()
-const port = process.env.PORT || 3000
-const cors = require('cors')
+const express = require('express');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const connectDB = require('./config/db');
+const authRoutes = require('./routes/auth');
+const bookRoutes = require('./routes/books');
 
-// middlewares - to connect front-end and back-end
-app.use(cors())
-app.use(express.json())
+dotenv.config();
 
+const app = express();
+const port = process.env.PORT || 3000;
 
-app.get('/',(req,res) => {
-  res.send("hello world")
-})
+// Middlewares
+app.use(cors());
+app.use(express.json());
 
-// mongoDB configuration
-
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-const uri = "mongodb+srv://tien100609:qVOS409gF5vgRTil@motbookdb.m8rl8li.mongodb.net";
-
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
+// Kết nối MongoDB và lưu client
+connectDB().then((client) => {
+  app.locals.db = client;
 });
 
-async function run() {
-  try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/books', bookRoutes);
 
-    // create a collection of documents
-    const bookCollections = client.db("MotBookData").collection("Books");
+// Route gốc
+app.get('/', (req, res) => {
+  res.send('Hello World');
+});
 
-    const accountCollections = client.db("MotBookData").collection("Users");
-    
-    const roleCollections = client.db("MotBookData").collection("Roles");
-
-    const chatCollections = client.db("MotBookData").collection("Chats");
-
-    // insert a data into db using post method
-    app.post('/upload-book', async(req,res) => {
-      const data = req.body;
-      const result = await bookCollections.insertOne(data);
-      res.send(result);
-    })
-
-    // get a data from db
-    app.get('/all-books' , async(req,res) => {
-      const books = await bookCollections.find();
-      const result = await books.toArray();
-      res.send(result);
-
-    })
-
-    // update a data using patch or update
-    app.patch('/book/:id', async(req,res) => {
-      const id = req.params.id;
-      const updateBookData = req.body;
-      const filter = {
-        _id: new ObjectId(id)
-      };
-
-      const updateDoc = {
-        $set: {
-          ...updateBookData
-        }
-      }
-      const options = {
-        upsert : true
-      };
-      const result = await bookCollections.updateOne(filter, updateDoc,options);
-      res.send(result);
-
-
-    })
-
-    // delete a book using delete
-    app.delete('/book/:id',async(req,res) => {
-      const id = req.params.id;
-      const filter = {
-        _id : new ObjectId(id)
-      }
-      const result = await bookCollections.deleteOne(filter);
-      res.send(result);
-    })
-
-    // find by category
-    app.get('/all-books',async(req,res) => {
-      let query = {};
-      if(req.query?.category){
-        query = {category: req.query.category}
-      }
-      const result = await bookCollections.find(query).toArray();
-      res.send(result);
-
-    })
-
-    // to get single book data
-    app.get('/book/:id',async(req,res) => {
-      const id = req.params.id;
-      const filter = {
-        _id : new ObjectId(id)
-      }
-      const result = await bookCollections.findOne(filter);
-      res.send(result);
-    })
-
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    // await client.close();
-  }
-}
-run().catch(console.dir);
-
-
-app.listen(port,() => {
-  console.log(`Example app listening on port ${port}`)
-})
+// Khởi động server
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
