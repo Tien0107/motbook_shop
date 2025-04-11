@@ -15,7 +15,7 @@ app.get('/',(req,res) => {
 // mongoDB configuration
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-const uri = "mongodb+srv://mern-book-store:pmYqpeZZvEMza9aZ@cluster0.vltqjjz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const uri = "mongodb+srv://tien100609:qVOS409gF5vgRTil@motbookdb.m8rl8li.mongodb.net";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -32,7 +32,13 @@ async function run() {
     await client.connect();
 
     // create a collection of documents
-    const bookCollections = client.db("BookInventory").collection("books");
+    const bookCollections = client.db("MotBookData").collection("Books");
+
+    const accountCollections = client.db("MotBookData").collection("Users");
+    
+    const roleCollections = client.db("MotBookData").collection("Roles");
+
+    const chatCollections = client.db("MotBookData").collection("Chats");
 
     // insert a data into db using post method
     app.post('/upload-book', async(req,res) => {
