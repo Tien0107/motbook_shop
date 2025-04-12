@@ -10,8 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@firebasegen/default-connector": "file:dataconnect-generated/js/default-connector",
-    "firebase": "^10.14.1",
     "flowbite-react": "^0.9.0",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.4",
