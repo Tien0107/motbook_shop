@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth');
 const bookRoutes = require('./routes/books');
+const debugMiddleware = require('./middleware/debugMiddleware');
 
 dotenv.config();
 
@@ -11,8 +12,16 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Middlewares
-app.use(cors());
+app.use(cors(
+  {
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  }
+));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+// app.use(debugMiddleware);
 
 // Kết nối MongoDB và lưu client
 connectDB().then((client) => {

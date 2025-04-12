@@ -8,7 +8,6 @@ const signup = async (req, res, client) => {
     if (!email || !password || !name) {
       return res.status(400).json({ message: 'Vui lòng cung cấp đầy đủ email, mật khẩu và tên' });
     }
-
     const userCollection = await getUserCollection(client);
     const existingUser = await userCollection.findOne({ email });
     if (existingUser) {
