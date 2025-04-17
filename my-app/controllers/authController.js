@@ -1,58 +1,107 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { getUserCollection } = require('../models/User');
+const User = require('../models/User');
+const { sendSuccess, sendError } = require('../utils/responseUtils');
+const { validateSignupData, validateLoginData } = require('../validators/authValidator');
 
-const signup = async (req, res, client) => {
+const signup = async (req, res) => {
   try {
     const { email, password, name } = req.body;
-    if (!email || !password || !name) {
-      return res.status(400).json({ message: 'Vui lòng cung cấp đầy đủ email, mật khẩu và tên' });
+    const validationResult = validateSignupData(email, password, name);
+    if (!validationResult.isValid) {
+      return sendError(res, validationResult.message, 400);
     }
 
-    const userCollection = await getUserCollection(client);
-    const existingUser = await userCollection.findOne({ email });
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: 'Email đã được sử dụng' });
+      return sendError(res, 'Email đã được sử dụng', 400);
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = { email, password: hashedPassword, name, createdAt: new Date() };
-    const result = await userCollection.insertOne(newUser);
+    const user = new User({
+      email,
+      password: hashedPassword,
+      name,
+      createdAt: new Date()
+    });
+    await user.save();
 
-    const token = jwt.sign({ userId: result.insertedId, email }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.status(201).json({ message: 'Đăng ký thành công', token, user: { id: result.insertedId, email, name } });
+    const token = jwt.sign(
+      { userId: user._id, email },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    return sendSuccess(
+      res,
+      { token, user: { id: user._id, email, name } },
+      'Đăng ký thành công',
+      201
+    );
   } catch (error) {
-    res.status(500).json({ message: 'Lỗi server', error });
+    return sendError(res, 'Lỗi server');
   }
 };
 
-const login = async (req, res, client) => {
+const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ message: 'Vui lòng cung cấp email và mật khẩu' });
+    const validationResult = validateLoginData(email, password);
+    if (!validationResult.isValid) {
+      return sendError(res, validationResult.message, 400);
     }
 
-    const userCollection = await getUserCollection(client);
-    const user = await userCollection.findOne({ email });
+    const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ message: 'Email hoặc mật khẩu không đúng' });
+      return sendError(res, 'Tài khoản không tồn tại', 401);
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await user.comparePassword(password);
     if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Email hoặc mật khẩu không đúng' });
+      return sendError(res, 'Email hoặc mật khẩu không đúng', 401);
     }
 
-    const token = jwt.sign({ userId: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.status(200).json({ message: 'Đăng nhập thành công', token, user: { id: user._id, email: user.email, name: user.name } });
+    const token = jwt.sign(
+      { userId: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    return sendSuccess(
+      res,
+      { token, user: { id: user._id, email: user.email, name: user.name } },
+      'Đăng nhập thành công'
+    );
   } catch (error) {
-    res.status(500).json({ message: 'Lỗi server', error });
+    return sendError(res, 'Lỗi server');
   }
 };
 
 const logout = (req, res) => {
-  res.status(200).json({ message: 'Đăng xuất thành công' });
+  return sendSuccess(res, null, 'Đăng xuất thành công');
 };
 
-module.exports = { signup, login, logout };
+const refreshToken = (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+      return sendError(res, 'Token không tìm thấy', 401);
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+      if (err) {
+        return sendError(res, 'Token không hợp lệ', 403);
+      }
+      const newToken = jwt.sign(
+        { userId: user.userId, email: user.email },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+      );
+      return sendSuccess(res, { token: newToken }, 'Refresh token thành công');
+    });
+  } catch (error) {
+    return sendError(res, 'Lỗi server');
+  }
+};
+
+module.exports = { signup, login, logout, refreshToken };
