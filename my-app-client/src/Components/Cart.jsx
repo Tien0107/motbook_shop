@@ -1,8 +1,8 @@
 import React from 'react';
-import useAuth from '../hooks/useAuth';
+import useAuthStore from '../store/authStore';
 
 const Cart = () => {
-    const { user } = useAuth();
+    const { user } = useAuthStore();
     const [cartItems, setCartItems] = React.useState([]);
 
     return (

@@ -1,8 +1,8 @@
 import React from 'react';
-import useAuth from '../hooks/useAuth';
+import useAuthStore from '../store/authStore';
 
 const Checkout = () => {
-    const { user } = useAuth();
+    const { user } = useAuthStore();
     const [formData, setFormData] = React.useState({
         fullName: user?.displayName || '',
         address: '',

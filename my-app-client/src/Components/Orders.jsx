@@ -1,8 +1,8 @@
 import React from 'react';
-import useAuth from '../hooks/useAuth';
+import useAuthStore from '../store/authStore';
 
 const Orders = () => {
-    const { user } = useAuth();
+    const { user } = useAuthStore();
     const [orders, setOrders] = React.useState([]);
 
     return (

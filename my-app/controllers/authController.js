@@ -18,10 +18,9 @@ const signup = async (req, res) => {
       return sendError(res, 'Email đã được sử dụng', 400);
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({
       email,
-      password: hashedPassword,
+      password,
       name,
       createdAt: new Date()
     });

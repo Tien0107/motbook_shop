@@ -13,7 +13,7 @@ import Logout from "../Components/Logout";
 import Orders from "../Components/Orders";
 import Signup from "../Components/Signup";
 import Dashboard from "../dashboard/Dashboard";
-import DashboradLayout from "../dashboard/DashboradLayout";
+import DashboardLayout from "../dashboard/DashboardLayout";
 import Details from "../dashboard/Details";
 import EditBooks from "../dashboard/EditBooks";
 import ManageBooks from "../dashboard/ManageBooks";
@@ -66,7 +66,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/admin/dashboard',
-    element: <DashboradLayout />,
+    element: <DashboardLayout />,
     children: [
       {
         path: "/admin/dashboard",
