@@ -3,8 +3,7 @@ const validateImageType = mimetype => {
 	return allowedTypes.includes(mimetype);
 };
 
-const validateImageSize = size => {
-	const maxSize = 5 * 1024 * 1024; // 5MB
+const validateImageSize = (size, maxSize = 50 * 1024 * 1024) => {
 	return size <= maxSize;
 };
 

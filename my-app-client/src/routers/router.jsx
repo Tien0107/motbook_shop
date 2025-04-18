@@ -3,10 +3,14 @@ import App from "../App";
 import About from "../Components/About";
 import ProtectedRoute from "../components/Auth/ProtectedRoute";
 import Blog from "../Components/Blog";
-import Login from "../pages/auth/LoginPage";
-import Signup from "../pages/auth/SignupPage";
+import Cart from "../Components/Cart";
+import Checkout from "../Components/Checkout";
+import Login from "../Components/Login";
+import Logout from "../Components/Logout";
+import Orders from "../Components/Orders";
+import Signup from "../Components/Signup";
 import Dashboard from "../dashboard/Dashboard";
-import DashboradLayout from "../dashboard/DashboradLayout";
+import DashboardLayout from "../dashboard/DashboardLayout";
 import Details from "../dashboard/Details";
 import EditBooks from "../dashboard/EditBooks";
 import ManageBooks from "../dashboard/ManageBooks";
@@ -23,12 +27,8 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "/",
-        element: (
-          <ProtectedRoute>
-            <Home />
-          </ProtectedRoute>
-        ),
+        path: '/',
+        element: <Home />
       },
       {
         path: "/shop",
@@ -36,23 +36,34 @@ const router = createBrowserRouter([
       },
       {
         path: "/about",
-        element: <About />,
+        element: <About />
       },
       {
         path: "/blog",
-        element: <Blog />,
+        element: <Blog />
       },
       {
         path: "/book/:id",
         element: <SingleBook />,
-        loader: ({ params }) =>
-          fetch(`http://localhost:3000/book/${params.id}`),
+        loader: ({ params }) => fetch(`http://localhost:3000/book/${params.id}`)
       },
-    ],
+      {
+        path: "/cart",
+        element: <ProtectedRoute><Cart /></ProtectedRoute>
+      },
+      {
+        path: "/orders",
+        element: <ProtectedRoute><Orders /></ProtectedRoute>
+      },
+      {
+        path: "/checkout",
+        element: <ProtectedRoute><Checkout /></ProtectedRoute>
+      }
+    ]
   },
   {
-    path: "/admin/dashboard",
-    element: <DashboradLayout />,
+    path: '/admin/dashboard',
+    element: <DashboardLayout />,
     children: [
       {
         path: "/admin/dashboard",

@@ -58,17 +58,17 @@ const debugMiddleware = (req, res, next) => {
 	};
 
 	// Override response methods
-	res.send = function(data) {
+	res.send = function (data) {
 		logResponse(data);
 		return originalSend.apply(res, arguments);
 	};
 
-	res.json = function(data) {
+	res.json = function (data) {
 		logResponse(data);
 		return originalJson.apply(res, arguments);
 	};
 
-	res.end = function(data) {
+	res.end = function (data) {
 		if (data) {
 			logResponse(data);
 		}

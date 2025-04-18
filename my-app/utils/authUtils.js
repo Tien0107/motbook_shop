@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+require('dotenv').config();
+
 const hashPassword = async password => {
 	return await bcrypt.hash(password, 10);
 };

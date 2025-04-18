@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { authenticateToken, checkAdmin } = require('../middleware/auth');
+const { authenticateToken, checkAdmin } = require('../middleware/authMiddleware');
 const {
 	getDashboardStats,
 	getSalesAnalytics,
