@@ -9,7 +9,7 @@ const getAllOrders = async (req, res) => {
 			return sendError(res, 'Permission denied', 403);
 		}
 		const orders = await Order.find()
-			.populate('user', 'name email')
+			.populate('user', 'name email phone address')
 			.populate('books.book', 'title price');
 		return sendSuccess(res, orders, 'Orders retrieved successfully');
 	} catch (error) {
@@ -22,7 +22,7 @@ const getOrderById = async (req, res) => {
 	try {
 		const { id } = req.params;
 		const order = await Order.findById(id)
-			.populate('user', 'name email')
+			.populate('user', 'name email phone address')
 			.populate('books.book', 'title price');
 
 		if (!order) {
@@ -92,7 +92,7 @@ const updateOrder = async (req, res) => {
 		const { id } = req.params;
 		const order = await Order.findByIdAndUpdate(id, req.body, {
 			new: true,
-		}).populate('user', 'name email');
+		}).populate('user', 'name email phone address');
 
 		if (!order) {
 			return sendError(res, 'Order not found', 404);

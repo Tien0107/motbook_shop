@@ -1,5 +1,5 @@
 const validateBookData = bookData => {
-	const { title, author, price, image, description, publishYear } = bookData;
+	const { title, author, price, images, description, publishYear } = bookData;
 
 	if (!title || !author || !price) {
 		return {
@@ -22,6 +22,20 @@ const validateBookData = bookData => {
 		return {
 			isValid: false,
 			message: 'Năm xuất bản không hợp lệ',
+		};
+	}
+
+	if (images.length === 0) {
+		return {
+			isValid: false,
+			message: 'Vui lòng cung cấp hình ảnh cơ bản',
+		};
+	}
+
+	if (!description) {
+		return {
+			isValid: false,
+			message: 'Vui lòng cung cấp mô tả',
 		};
 	}
 

@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { sendSuccess, sendError } = require('../utils/responseUtils');
 const { validateSignupData, validateLoginData } = require('../validators/authValidator');
+require('dotenv').config();
 
 const signup = async (req, res) => {
   try {
@@ -61,15 +62,21 @@ const login = async (req, res) => {
       return sendError(res, 'Email hoặc mật khẩu không đúng', 401);
     }
 
-    const token = jwt.sign(
+    const accessToken = jwt.sign(
       { userId: user._id, email: user.email },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
 
+    const refreshToken = jwt.sign(
+      { userId: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
     return sendSuccess(
       res,
-      { token, user: { id: user._id, email: user.email, name: user.name } },
+      { accessToken, refreshToken, user: { id: user._id, email: user.email, name: user.name } },
       'Đăng nhập thành công'
     );
   } catch (error) {
