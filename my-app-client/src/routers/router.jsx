@@ -6,8 +6,11 @@ import About from "../Components/About";
 import AuthForm from '../components/Auth/AuthForm';
 import ProtectedRoute from '../components/Auth/ProtectedRoute';
 import Blog from "../Components/Blog";
+import Cart from "../Components/Cart";
+import Checkout from "../Components/Checkout";
 import Login from "../Components/Login";
 import Logout from "../Components/Logout";
+import Orders from "../Components/Orders";
 import Signup from "../Components/Signup";
 import Dashboard from "../dashboard/Dashboard";
 import DashboradLayout from "../dashboard/DashboradLayout";
@@ -21,7 +24,6 @@ import PrivateRoute from "../PrivateRoute/PrivateRoute";
 import Shop from "../shops/Shop";
 import SingleBook from "../shops/SingleBook";
 
-
 const router = createBrowserRouter([
   {
     path: "/",
@@ -29,11 +31,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: (
-          <ProtectedRoute>
-            <Home />
-          </ProtectedRoute>
-        )
+        element: <Home />
       },
       {
         path: "/shop",
@@ -42,15 +40,27 @@ const router = createBrowserRouter([
       {
         path: "/about",
         element: <About />
-      }
-      , {
+      },
+      {
         path: "/blog",
         element: <Blog />
-      }
-      , {
+      },
+      {
         path: "/book/:id",
         element: <SingleBook />,
         loader: ({ params }) => fetch(`http://localhost:3000/book/${params.id}`)
+      },
+      {
+        path: "/cart",
+        element: <ProtectedRoute><Cart /></ProtectedRoute>
+      },
+      {
+        path: "/orders",
+        element: <ProtectedRoute><Orders /></ProtectedRoute>
+      },
+      {
+        path: "/checkout",
+        element: <ProtectedRoute><Checkout /></ProtectedRoute>
       }
     ]
   },
