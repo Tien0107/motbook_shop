@@ -1,9 +1,9 @@
-import React from 'react';
-import useAuthStore from '../store/authStore';
+import React, { useState } from 'react';
+import useAuthStore from '../features/auth/stores/authStore';
 
 const Orders = () => {
     const { user } = useAuthStore();
-    const [orders, setOrders] = React.useState([]);
+    const [orders, setOrders] = useState([]);
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
