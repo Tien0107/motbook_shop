@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import useAuthStore from '../features/auth/stores/authStore';
 
 const Orders = () => {
     const { user } = useAuthStore();
     const [orders, setOrders] = useState([]);
+
+    const handleRemoveOrder = (orderId) => {
+        setOrders(orders.filter(order => order.id !== orderId));
+    }
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
