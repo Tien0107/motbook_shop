@@ -1,38 +1,53 @@
 import { useEffect, useState } from 'react'
-import { FaBarsStaggered, FaBlog, FaXmark } from "react-icons/fa6";
-import {Link} from 'react-router-dom';
+import { FaBarsStaggered, FaBlog, FaXmark, FaUser } from "react-icons/fa6";
+import { FaShoppingCart } from "react-icons/fa";
+import {Link, useNavigate} from 'react-router-dom';
 import useAuthStore from '../features/auth/stores/authStore';
 
 const Navbar = () => {
+  const navigate = useNavigate()
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const {user} = useAuthStore()
+  const {user, logout} = useAuthStore()
   
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   }
-    useEffect(() => {
-      const handleScroll = () => {
-        if(window.scrollY > 100){
-          setIsSticky(true);
-        }
-        else{
-          setIsSticky(false);
-        }
-      }
-      window.addEventListener("scroll",handleScroll);
 
-      return () => {
-        window.addEventListener("scroll", handleScroll);
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  }
+
+  const handleLogout = () => {
+    logout()
+    setIsDropdownOpen(false);
+    navigate('/')
+  }
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if(window.scrollY > 100){
+        setIsSticky(true);
       }
-    }, []);
+      else{
+        setIsSticky(false);
+      }
+    }
+    window.addEventListener("scroll",handleScroll);
+
+    return () => {
+      window.addEventListener("scroll", handleScroll);
+    }
+  }, []);
   
   // nav items
   const navItems = [
     {link: "Home",path: '/'},
     {link: "About",path: '/about'},
     {link: "Shop",path: '/shop'},
+    {link: "Cart",path: '/cart'},  // Thêm Cart
     {link: "Sell Your Book",path: '/admin/dashboard'},
     {link: "Blog",path: '/blog'}
   ]
@@ -51,6 +66,55 @@ const Navbar = () => {
             }
           </ul>
           <div className='space-x-12 hidden lg:flex items-center'>
+            {user ? (
+              <>
+                <Link to="/cart" className="relative">
+                  <FaShoppingCart className="w-5 h-5 text-black hover:text-blue-700" />
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                    0
+                  </span>
+                </Link>
+                <div className="relative">
+                  <button 
+                    onClick={toggleDropdown}
+                    className="flex items-center space-x-2 text-black hover:text-blue-700"
+                  >
+                    <FaUser className="w-5 h-5"/>
+                    <span>{user.username}</span>
+                  </button>
+                  
+                  {/* Dropdown Menu */}
+                  {isDropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
+                      <Link
+                        to="/profile"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50"
+                      >
+                        Profile
+                      </Link>
+                      <button
+                        onClick={handleLogout}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50"
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </>
+            ) : (
+              <>
+                <Link to="/cart" className="relative">
+                  <FaShoppingCart className="w-5 h-5 text-black hover:text-blue-700" />
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                    0
+                  </span>
+                </Link>
+                <Link to="/login" className="text-black hover:text-blue-700">
+                  Login
+                </Link>
+              </>
+            )}
             <button><FaBarsStaggered className='w-5 hover:text-blue-700'/></button>
           </div>
 
@@ -69,6 +133,14 @@ const Navbar = () => {
           {
             navItems.map(({link,path}) => <Link key={path} to={path} className='block text-base text-white uppercase cursor-pointer'>{link}</Link>)
           }
+          {user ? (
+            <>
+              <Link to="/profile" className='block text-base text-white uppercase cursor-pointer'>Profile</Link>
+              <button onClick={handleLogout} className='block text-base text-white uppercase cursor-pointer'>Logout</button>
+            </>
+          ) : (
+            <Link to="/login" className='block text-base text-white uppercase cursor-pointer'>Login</Link>
+          )}
         </div>
       </nav>
     </header>
