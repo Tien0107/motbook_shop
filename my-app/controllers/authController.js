@@ -1,4 +1,3 @@
-const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { sendSuccess, sendError } = require('../utils/responseUtils');
@@ -12,8 +11,8 @@ const signup = async (req, res) => {
     if (!validationResult.isValid) {
       return sendError(res, validationResult.message, 400);
     }
-
-    const existingUser = await User.findOne({ email });
+    const userCollection = await getUserCollection(client);
+    const existingUser = await userCollection.findOne({ email });
     if (existingUser) {
       return sendError(res, 'Email đã được sử dụng', 400);
     }
