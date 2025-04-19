@@ -13,7 +13,7 @@ import EditBooks from "../dashboard/EditBooks";
 import ManageBooks from "../dashboard/ManageBooks";
 import Profile from "../dashboard/Profile";
 import UploadBook from "../dashboard/UploadBook";
-import Home from "../homes/Home";
+import Home from "..//pages/homes/Home";
 import PrivateRoute from "../Components/Auth/PrivateRoute";
 import Shop from "../shops/Shop";
 import SingleBook from "../shops/SingleBook";
