@@ -5,10 +5,7 @@ import ProtectedRoute from "../components/Auth/ProtectedRoute";
 import Blog from "../Components/Blog";
 import Cart from "../Components/Cart";
 import Checkout from "../Components/Checkout";
-import Login from "../Components/Login";
-import Logout from "../Components/Logout";
 import Orders from "../Components/Orders";
-import Signup from "../Components/Signup";
 import Dashboard from "../dashboard/Dashboard";
 import DashboardLayout from "../dashboard/DashboardLayout";
 import Details from "../dashboard/Details";
@@ -20,6 +17,8 @@ import Home from "../homes/Home";
 import PrivateRoute from "../Components/Auth/PrivateRoute";
 import Shop from "../shops/Shop";
 import SingleBook from "../shops/SingleBook";
+import SignUpPage from "../pages/auth/SignupPage";
+import LoginPage from "../pages/auth/LoginPage";
 
 const router = createBrowserRouter([
   {
@@ -99,11 +98,11 @@ const router = createBrowserRouter([
   },
   {
     path: "sign-up",
-    element: <Signup />,
+    element: <SignUpPage />,
   },
   {
     path: "login",
-    element: <Login />,
+    element: <LoginPage />,
   },
 ]);
 

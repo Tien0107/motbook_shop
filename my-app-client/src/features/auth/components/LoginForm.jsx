@@ -30,7 +30,7 @@ const LoginForm = () => {
             
             const response = await authService.login(email, password);
             if (response) {
-                login(response);
+                login(response.data);
                 navigate('/');
             }
         } catch (error) {
