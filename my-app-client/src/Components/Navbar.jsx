@@ -1,15 +1,14 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FaBarsStaggered, FaBlog, FaXmark } from "react-icons/fa6";
 import {Link} from 'react-router-dom';
-import { AuthContext } from '../contects/AuthProider';
+import useAuthStore from '../features/auth/stores/authStore';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
 
-  const {user} = useContext(AuthContext);
-  console.log(user);
-
+  const {user} = useAuthStore()
+  
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   }

@@ -1,6 +1,8 @@
 const Book = require('../models/Book');
 const cloudinary = require('../config/cloudinary');
 const { sendSuccess, sendError } = require('../utils/responseUtils');
+const { uploadMultiple } = require('../controllers/uploadController');
+const { validateBookData } = require('../validators/bookValidator');
 
 // Public endpoints
 const getAllBooks = async (req, res) => {
@@ -35,18 +37,60 @@ const uploadBook = async (req, res) => {
     if (!req.user.hasPermission('manage_books')) {
       return sendError(res, 'Permission denied', 403);
     }
-
-    const bookData = req.body;
-    // Kiểm tra xem có ảnh được gửi lên không
-    if (!bookData.images || !Array.isArray(bookData.images)) {
-      return sendError(res, 'Book images are required', 400);
+    console.log('Files after Multer:', req.files);
+    console.log('Body after Multer:', req.body);
+    if (!req.files || req.files.length === 0) {
+      return sendError(res, 'Please upload at least one image', 400);
     }
 
-    const book = new Book(bookData);
-    await book.save();
-    return sendSuccess(res, book, 'Book uploaded successfully', 201);
+    try {
+      // Upload images to Cloudinary
+      const uploadPromises = req.files.map(async file => {
+        const b64 = Buffer.from(file.buffer).toString('base64');
+        const dataURI = 'data:' + file.mimetype + ';base64,' + b64;
+
+        return cloudinary.uploader.upload(dataURI, {
+          folder: 'motbook/products',
+          resource_type: 'auto',
+          transformation: [
+            { width: 800, crop: 'scale' },
+            { quality: 'auto' },
+          ],
+        });
+      });
+
+      const results = await Promise.all(uploadPromises);
+
+      // Transform Cloudinary results to image data
+      const images = results.map(result => ({
+        url: result.secure_url,
+        public_id: result.public_id,
+      }));
+
+      // Create book with uploaded image data
+      const bookData = {
+        ...req.body,
+        images
+      };
+
+      // Validate book data
+      const { isValid, message } = validateBookData(bookData);
+      if (!isValid) {
+        return sendError(res, message, 400);
+      }
+
+      const book = new Book(bookData);
+      await book.save();
+
+      return sendSuccess(res, book, 'Book created successfully', 201);
+    } catch (error) {
+      console.error('Upload/Save error:', error);
+      return sendError(res, 'Error processing book upload', 500);
+    }
+
   } catch (error) {
-    return sendError(res, 'Error uploading book');
+    console.error('Book creation error:', error);
+    return sendError(res, 'Error creating book', 500);
   }
 };
 
@@ -71,10 +115,31 @@ const updateBook = async (req, res) => {
       const deletePromises = oldBook.images
         .filter(image => image.public_id) // Chỉ xóa những ảnh có public_id
         .map(image => cloudinary.uploader.destroy(image.public_id));
-      
-      await Promise.all(deletePromises);
-    }
 
+      await Promise.all(deletePromises);
+
+      // Thêm ảnh mới với Cloudinary
+      const newImagePromises = updateData.images.map(async (image) => {
+        const b64 = Buffer.from(image.buffer).toString('base64');
+        const dataURI = 'data:' + image.mimetype + ';base64,' + b64;
+
+        return cloudinary.uploader.upload(dataURI, {
+          folder: 'motbook/products',
+          resource_type: 'auto',
+          transformation: [
+            { width: 800, crop: 'scale' },
+            { quality: 'auto' },
+          ],
+        });
+      });
+
+      const newImageResults = await Promise.all(newImagePromises);
+
+      updateData.images = newImageResults.map(result => ({
+        url: result.secure_url,
+        public_id: result.public_id,
+      }));
+    }
     // Cập nhật sách với dữ liệu mới
     const updatedBook = await Book.findByIdAndUpdate(
       id,
@@ -97,7 +162,7 @@ const deleteBook = async (req, res) => {
 
     const { id } = req.params;
     const book = await Book.findById(id);
-    
+
     if (!book) {
       return sendError(res, 'Book not found', 404);
     }

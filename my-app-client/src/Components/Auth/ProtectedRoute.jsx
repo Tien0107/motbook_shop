@@ -1,9 +1,9 @@
 import { Navigate } from 'react-router-dom';
-import useAuthStore from '../../store/authStore';
+import useAuthStore from '../../features/auth/stores/authStore';
 
 const ProtectedRoute = ({ children }) => {
     const { user, loading } = useAuthStore();
-
+    
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center">

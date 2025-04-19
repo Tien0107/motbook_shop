@@ -17,6 +17,10 @@ const bookSchema = new mongoose.Schema({
 		required: [true, 'Giá sách là bắt buộc'],
 		min: [0, 'Giá sách không thể âm'],
 	},
+	stock: {
+		type: Number,
+		default: 0,
+	},
 	images: [
 		{
 			url: String,

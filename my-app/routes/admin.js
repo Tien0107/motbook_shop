@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { authenticateToken, checkAdmin } = require('../middleware/auth');
+const { authenticateToken, checkAdmin } = require('../middleware/authMiddleware');
 const {
 	uploadBook,
 	updateBook,
@@ -27,6 +27,7 @@ const {
 	getAllUserPermissions,
 	updateUserPermissions,
 } = require('../controllers/adminController');
+const { uploadMultiple } = require('../controllers/uploadController');
 // const {
 // 	getAllMaterials,
 // 	updateMaterial,
@@ -36,7 +37,7 @@ const {
 router.use(authenticateToken, checkAdmin);
 
 // Quản lý sách
-router.post('/books', uploadBook);
+router.post('/books',uploadMultiple, uploadBook);
 router.put('/books/:id', updateBook);
 router.delete('/books/:id', deleteBook);
 

@@ -13,14 +13,19 @@ const analyticsRoutes = require('./routes/analytics');
 const adminRoutes = require('./routes/admin');
 const uploadRoutes = require('./routes/upload');
 const profileRoutes = require('./routes/profile');
+const debugMiddleware = require('./middleware/debugMiddleware');
 
 dotenv.config();
 const app = express();
 
 // Middlewares
 app.use(cors());
-app.use(express.json({ limit: '50mb', extended: true }));
 app.use(cookieParser());
+
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
+app.use(debugMiddleware);
 
 // Connect to MongoDB
 connectDB();

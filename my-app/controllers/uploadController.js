@@ -13,30 +13,7 @@ const storage = multer.memoryStorage();
 const uploadSingle = multer({
 	storage,
 	limits: {
-		fileSize: 2 * 1024 * 1024, // 2MB limit for avatars
-	},
-	fileFilter: (req, file, cb) => {
-		if (!validateImageType(file.mimetype)) {
-			cb(
-				new Error('Invalid image type. Allowed types: jpeg, png, gif, webp'),
-				false,
-			);
-			return;
-		}
-		if (!validateImageSize(file.size)) {
-			cb(new Error('Image too large. Maximum size: 2MB'), false);
-			return;
-		}
-		cb(null, true);
-	},
-}).single('image');
-
-// Multiple upload configuration for products
-const uploadMultiple = multer({
-	storage,
-	limits: {
-		fileSize: 5 * 1024 * 1024, // 5MB limit for product images
-		files: 5, // Maximum 5 files
+		fileSize: 5 * 1024 * 1024, // 5MB limit for avatars
 	},
 	fileFilter: (req, file, cb) => {
 		if (!validateImageType(file.mimetype)) {
@@ -50,6 +27,30 @@ const uploadMultiple = multer({
 			cb(new Error('Image too large. Maximum size: 5MB'), false);
 			return;
 		}
+		cb(null, true);
+	},
+}).single('image');
+
+// Multiple upload configuration for products
+const uploadMultiple = multer({
+	storage,
+	limits: {
+		fileSize: 50 * 1024 * 1024, // 50MB limit for product images
+		fieldSize: 50 * 1024 * 1024,
+		files: 5, // Maximum 5 files
+	},
+	fileFilter: (req, file, cb) => {
+		if (!validateImageType(file.mimetype)) {
+			cb(
+				new Error('Invalid image type. Allowed types: jpeg, png, gif, webp'),
+				false,
+			);
+			return;
+		}
+		// if (!validateImageSize(file.size, 50 * 1024 * 1024)) {
+		// 	cb(new Error('Image too large. Maximum size: 50MB'), false);
+		// 	return;
+		// }
 		cb(null, true);
 	},
 }).array('images', 5);
@@ -180,4 +181,6 @@ module.exports = {
 	handleSingleUpload,
 	handleMultipleUpload,
 	deleteImage,
+	uploadSingle,
+	uploadMultiple
 };
