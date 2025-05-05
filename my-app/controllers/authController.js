@@ -1,4 +1,3 @@
-const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { sendSuccess, sendError } = require('../utils/responseUtils');
@@ -75,7 +74,7 @@ const login = async (req, res) => {
 
     return sendSuccess(
       res,
-      { accessToken, refreshToken, user: { id: user._id, email: user.email, name: user.name } },
+      { accessToken, refreshToken, user },
       'Đăng nhập thành công'
     );
   } catch (error) {
