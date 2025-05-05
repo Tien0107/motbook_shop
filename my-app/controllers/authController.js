@@ -74,7 +74,7 @@ const login = async (req, res) => {
 
     return sendSuccess(
       res,
-      { accessToken, refreshToken, user: { id: user._id, email: user.email, name: user.name, role: user.role } },
+      { accessToken, refreshToken, user },
       'Đăng nhập thành công'
     );
   } catch (error) {

@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
-import useAuthStore from '../features/auth/stores/authStore';
+import useAuthStore from '../../features/auth/stores/authStore';
 
 const Profile = () => {
     const { user, logout } = useAuthStore();
+    console.log(user);
 
     return (
         <div className="max-w-4xl mx-auto px-4 py-8">
@@ -10,12 +11,12 @@ const Profile = () => {
                 {/* User Info Section */}
                 <div className="text-center mb-8">
                     <img
-                        src={user?.photoURL || '/assets/profile.jpg'}
+                        src={user?.user.avatar.url || '/assets/profile.jpg'}
                         alt="Profile"
                         className="w-32 h-32 rounded-full mx-auto mb-4"
                     />
-                    <h2 className="text-2xl font-bold text-gray-800">{user?.displayName}</h2>
-                    <p className="text-gray-600">{user?.email}</p>
+                    <h2 className="text-2xl font-bold text-gray-800">{user?.user.name}</h2>
+                    <p className="text-gray-600">{user?.user.email}</p>
                 </div>
 
                 {/* Quick Links Section */}
