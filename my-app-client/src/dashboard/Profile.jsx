@@ -1,6 +1,5 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
-import useAuthStore from '../store/authStore';
+import useAuthStore from '../features/auth/stores/authStore';
 
 const Profile = () => {
     const { user, logout } = useAuthStore();

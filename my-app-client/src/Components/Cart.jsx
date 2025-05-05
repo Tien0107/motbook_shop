@@ -1,10 +1,16 @@
-import React from 'react';
-import useAuthStore from '../store/authStore';
-
+import { useState } from 'react';
+import useAuthStore from '../features/auth/stores/authStore';
 const Cart = () => {
     const { user } = useAuthStore();
-    const [cartItems, setCartItems] = React.useState([]);
+    const [cartItems, setCartItems] = useState([]);
 
+    const handleRemoveItem = (itemId) => {
+        setCartItems(cartItems.filter(item => item.id !== itemId));
+    }
+
+    const calculateTotal = () => {
+        return cartItems.reduce((total, item) => total + item.price, 0);
+    }
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <h2 className="text-3xl font-bold mb-8">Giỏ hàng của {user?.displayName}</h2>

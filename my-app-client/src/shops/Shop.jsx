@@ -6,14 +6,14 @@ const Shop = () => {
   const [books, setBooks] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/all-books").then(res => res.json()).then(data => setBooks(data));
+    fetch("http://localhost:3000/api/books").then(res => res.json()).then(data => setBooks(data));
   },[])
   return (
     <div className='mt-28 px-4 lg:px-24'>
       <h1 className='text-5xl my-12 font-bold text-center'>All Books are here</h1>
       <div className='grid gap-8 my-12 lg:grid-cols-4 sm:grid-cols-2 md:grid-cols-3 grid-cols-1'>
         {
-          books.map(book => <Card className='shadow-2xl'
+          books.map(book => <Card key={book.id} className='shadow-2xl'
             >
               <img src={book.image_url} alt="" className='h-96 my-5 mx-5'/>
             <h5 className="text-1xl font-bold tracking-tight text-gray-900 dark:text-white mx-3">
