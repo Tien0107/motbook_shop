@@ -46,6 +46,24 @@ const userSchema = new mongoose.Schema({
     enum: ['active', 'suspended', 'banned', 'inactive'],
     default: 'active'
   },
+  cart: [
+    {
+      book: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Book',
+        required: true
+      },
+      quantity: {
+        type: Number,
+        required: true,
+        min: [1, 'Số lượng phải lớn hơn 0']
+      },
+      totalPrice: {
+        type: Number,
+        required: true
+      }
+    }
+  ],
   orders: [mongoose.Schema.Types.ObjectId],
   orderCount: {
     type: Number,

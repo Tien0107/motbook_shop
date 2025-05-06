@@ -25,15 +25,15 @@ const signup = async (req, res) => {
     });
     await user.save();
 
-    const token = jwt.sign(
-      { userId: user._id, email },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
+    // const token = jwt.sign(
+    //   { userId: user._id, email },
+    //   process.env.JWT_SECRET,
+    //   { expiresIn: '1h' }
+    // );
 
     return sendSuccess(
       res,
-      { token, user: { id: user._id, email, name } },
+      { user: { id: user._id, email, name } },
       'Đăng ký thành công',
       201
     );
@@ -88,12 +88,12 @@ const logout = (req, res) => {
 
 const refreshToken = (req, res) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
-    if (!token) {
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
       return sendError(res, 'Token không tìm thấy', 401);
     }
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    jwt.verify(refreshToken, process.env.JWT_SECRET, (err, user) => {
       if (err) {
         return sendError(res, 'Token không hợp lệ', 403);
       }
@@ -102,7 +102,7 @@ const refreshToken = (req, res) => {
         process.env.JWT_SECRET,
         { expiresIn: '1h' }
       );
-      return sendSuccess(res, { token: newToken }, 'Refresh token thành công');
+      return sendSuccess(res, { accessToken: newToken, refreshToken }, 'Refresh token thành công');
     });
   } catch (error) {
     return sendError(res, 'Lỗi server');

@@ -10,13 +10,13 @@ const authService = {
 		if (!response.data) {
 			return null;
 		}
+		
 		return response.data;
 	},
 
 	async register(userData) {
 		// Implement register logic here
 		const response = await axios.post(`${API_URL}/register`, userData);
-		console.log(``);
 		
 		if (!response.data) {
 			return null;
