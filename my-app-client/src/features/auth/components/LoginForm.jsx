@@ -1,11 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import authService from '../services/authService';
 import useAuthStore from '../stores/authStore';
-import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
 const schema = yup.object().shape({
     email: yup.string().required('Email is required').email('Must be a valid email'),
@@ -27,13 +28,16 @@ const LoginForm = () => {
     const onSubmit = async (data) => {
         try {
             const { email, password } = data;
-            
+
             const response = await authService.login(email, password);
+            
             if (response) {
+                toast.success(response.message || 'Login successful');
                 login(response.data);
                 navigate('/');
             }
         } catch (error) {
+            toast.error(error);
             console.error('Login failed:', error);
         }
     };
@@ -72,7 +76,7 @@ const LoginForm = () => {
                 )}
             </div>
             <div className="relative">
-                <button 
+                <button
                     type="submit"
                     className="bg-blue-500 text-white rounded-md px-6 py-2 hover:bg-black transition-colors"
                 >
