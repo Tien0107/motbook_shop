@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import authService from '../services/authService';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import toast from 'react-hot-toast';
 
 const schema = yup.object().shape({
     name: yup.string().required('Full name is required').min(2, 'Name must be at least 2 characters'),
@@ -33,6 +34,7 @@ const RegisterForm = () => {
         try {
             const response = await authService.register(data);
             if (response) {
+                toast.success(response.message || 'Registration successful');
                 navigate('/login');
             }
         } catch (error) {
