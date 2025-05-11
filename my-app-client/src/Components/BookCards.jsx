@@ -1,13 +1,13 @@
-import React, { useRef, useState } from 'react';
+// import React, { useRef, useState } from 'react';
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
 import {Link} from 'react-router-dom';
-
+import PropTypes from 'prop-types';
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-import { FaCartShopping } from 'react-icons/fa6';
+// import { FaCartShopping } from 'react-icons/fa6';
 
 // import './BookCard.css';
 
@@ -50,19 +50,20 @@ const BookCards = ({books, headline}) => {
           books.map(book => <SwiperSlide key={book._id}>
             <Link to={`/book/${book._id}`}>
               <div className='relative'>
-                <img src={book.image_url} alt=""/>
-                <div className='absolute top-3 right-3 bg-blue-600 hover:bg-black p-2 rounded'>
-                  <FaCartShopping className='w-4 h-4 text-white'/>
-                </div>
-              </div>
-              <div>
-                <div>
-                <h3>{book.book_title}</h3>
-                <p>{book.authorName}</p>
-                </div>
-                <div>
-                  <p>$10.00</p>
-                </div>
+                <img 
+                   src={book.images[0].url}
+                   alt={book.title}
+                   className="w-full h-60 object-cover "
+                 />
+                 <h5 className="text-lg font-bold tracking-tight text-gray-900 dark:text-white mx-3 mt-2">
+                   {book.title}
+                 </h5>
+                 <p className="font-normal text-gray-500 dark:text-gray-400 mx-3 my-2 text-sm">
+                   Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.
+                 </p>
+                 <button className="bg-blue-700 font-semibold text-white py-2 rounded mx-3 my-3 hover:bg-black w-[90%]">
+                   Buy Now
+                 </button>
               </div>
             </Link>
           </SwiperSlide>)
@@ -71,9 +72,20 @@ const BookCards = ({books, headline}) => {
       </Swiper>
   
     </div>
-      
     </div>
+    
   )
-}
+};
+BookCards.propTypes = {
+  books: PropTypes.arrayOf(
+    PropTypes.shape({
+      _id: PropTypes.string.isRequired,
+      image_url: PropTypes.string.isRequired,
+      book_title: PropTypes.string.isRequired,
+      authorName: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  headline: PropTypes.string.isRequired,
+};
 
 export default BookCards

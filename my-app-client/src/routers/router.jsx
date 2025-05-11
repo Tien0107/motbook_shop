@@ -13,12 +13,13 @@ import EditBooks from "../dashboard/EditBooks";
 import ManageBooks from "../dashboard/ManageBooks";
 import Profile from "../dashboard/Profile";
 import UploadBook from "../dashboard/UploadBook";
-import Home from "../homes/Home";
+import Home from "../pages/homes/Home";
 import PrivateRoute from "../Components/Auth/PrivateRoute";
-import Shop from "../shops/Shop";
-import SingleBook from "../shops/SingleBook";
+import Shop from "../pages/shops/Shop";
+import SingleBook from "../pages/shops/SingleBook";
 import SignUpPage from "../pages/auth/SignupPage";
 import LoginPage from "../pages/auth/LoginPage";
+import SearchPage from "../../src/Components/Search";
 
 const router = createBrowserRouter([
   {
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
       {
         path: "/checkout",
         element: <ProtectedRoute><Checkout /></ProtectedRoute>
+      },
+      {
+        path: "/search",
+        element: <SearchPage />,
       }
     ]
   },
