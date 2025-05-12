@@ -8,6 +8,7 @@ import Cart from "../Components/Cart";
 import Checkout from "../Components/Checkout";
 import Orders from "../Components/Orders";
 import Home from "../homes/Home";
+import DealBooks from "../homes/DealBooks";
 import LoginPage from "../pages/auth/LoginPage";
 import SignUpPage from "../pages/auth/SignupPage";
 import Dashboard from "../pages/dashboard/Dashboard";
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <Home />
+      },
+      {
+        path: "/deals",
+        element: <DealBooks />
       },
       {
         path: "/shop",
