@@ -13,7 +13,7 @@ const Cart = () => {
     }
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <h2 className="text-3xl font-bold mb-8">Giỏ hàng của {user?.displayName}</h2>
+            <h2 className="text-3xl font-bold mb-8">Giỏ hàng của {user?.user.name}</h2>
             {cartItems.length === 0 ? (
                 <p>Giỏ hàng trống</p>
             ) : (
