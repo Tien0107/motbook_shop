@@ -1,4 +1,4 @@
-// import React, { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -13,7 +13,7 @@ import 'swiper/css/pagination';
 // import required modules
 import { FreeMode, Pagination } from 'swiper/modules';
 import { FaStar } from 'react-icons/fa6';
-// import { Avatar } from 'flowbite-react';
+import { Avatar } from 'flowbite-react';
 
 const  Review = () => {
   return(

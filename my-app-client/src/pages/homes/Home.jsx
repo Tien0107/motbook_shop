@@ -1,6 +1,5 @@
-// import React from 'react'
 import Banner from '../../Components/Banner'
-// import FavoriteBooks from './BestSellerBooks'
+
 import BestSellerBooks from './BestSellerBooks'
 import FavBook from './FavBook'
 import PromoBanner from './PromoBanner'

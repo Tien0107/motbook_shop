@@ -1,24 +1,26 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import About from "../Components/About";
+import PrivateRoute from "../Components/Auth/PrivateRoute";
 import ProtectedRoute from "../components/Auth/ProtectedRoute";
 import Blog from "../Components/Blog";
 import Cart from "../Components/Cart";
 import Checkout from "../Components/Checkout";
 import Orders from "../Components/Orders";
-import Dashboard from "../dashboard/Dashboard";
-import DashboardLayout from "../dashboard/DashboardLayout";
-import Details from "../dashboard/Details";
-import EditBooks from "../dashboard/EditBooks";
-import ManageBooks from "../dashboard/ManageBooks";
-import Profile from "../dashboard/Profile";
-import UploadBook from "../dashboard/UploadBook";
 import Home from "..//pages/homes/Home";
-import PrivateRoute from "../Components/Auth/PrivateRoute";
-import Shop from "../shops/Shop";
-import SingleBook from "../shops/SingleBook";
-import SignUpPage from "../pages/auth/SignupPage";
+import DealBooks from "../pages/homes/DealBooks";
 import LoginPage from "../pages/auth/LoginPage";
+import SignUpPage from "../pages/auth/SignupPage";
+import Dashboard from "../pages/dashboard/Dashboard";
+import DashboardLayout from "../pages/dashboard/DashboardLayout";
+import Details from "../pages/dashboard/Details";
+import EditBooks from "../pages/dashboard/EditBooks";
+import ManageBooks from "../pages/dashboard/ManageBooks";
+import Profile from "../pages/dashboard/Profile";
+import UploadBook from "../pages/dashboard/UploadBook";
+import Shop from "../pages/shops/Shop";
+import SingleBook from "../pages/shops/SingleBook";
+import SearchPage from "../../src/Components/Search";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <Home />
+      },
+      {
+        path: "/deals",
+        element: <DealBooks />
       },
       {
         path: "/shop",
@@ -44,7 +50,14 @@ const router = createBrowserRouter([
       {
         path: "/book/:id",
         element: <SingleBook />,
-        loader: ({ params }) => fetch(`http://localhost:3000/book/${params.id}`)
+        loader: async ({ params }) => {
+          const res = await fetch(`http://localhost:3000/api/books/${params.id}`);
+            const json = await res.json();     
+            if (!json) {
+              throw new Error("Book not found");
+            }
+            return json.data;
+        },
       },
       {
         path: "/cart",
@@ -57,6 +70,10 @@ const router = createBrowserRouter([
       {
         path: "/checkout",
         element: <ProtectedRoute><Checkout /></ProtectedRoute>
+      },
+      {
+        path: "/search",
+        element: <SearchPage />,
       }
     ]
   },
@@ -83,8 +100,11 @@ const router = createBrowserRouter([
       {
         path: "/admin/dashboard/edit-books/:id",
         element: <EditBooks />,
-        loader: ({ params }) =>
-          fetch(`http://localhost:3000/book/${params.id}`),
+        loader: async ({ params }) => {
+          const res = await fetch(`http://localhost:3000/api/books/${params.id}`);
+          const json = await res.json();
+          return json.data;
+        },
       },
       {
         path: "/admin/dashboard/profile",

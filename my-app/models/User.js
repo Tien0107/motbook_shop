@@ -31,8 +31,14 @@ const userSchema = new mongoose.Schema({
     country: String
   },
   avatar: {
-    url: String,
-    public_id: String
+    url: {
+      type: String,
+      default: 'https://icons.iconarchive.com/icons/papirus-team/papirus-status/512/avatar-default-icon.png'
+    },
+    public_id: {
+      type: String,
+      default: ''
+    },
   },
   // Customer specific fields
   status: {
@@ -40,6 +46,24 @@ const userSchema = new mongoose.Schema({
     enum: ['active', 'suspended', 'banned', 'inactive'],
     default: 'active'
   },
+  cart: [
+    {
+      book: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Book',
+        required: true
+      },
+      quantity: {
+        type: Number,
+        required: true,
+        min: [1, 'Số lượng phải lớn hơn 0']
+      },
+      totalPrice: {
+        type: Number,
+        required: true
+      }
+    }
+  ],
   orders: [mongoose.Schema.Types.ObjectId],
   orderCount: {
     type: Number,
@@ -72,13 +96,13 @@ const userSchema = new mongoose.Schema({
 });
 
 // Middleware to update the updatedAt field
-userSchema.pre('save', function(next) {
+userSchema.pre('save', function (next) {
   this.updatedAt = Date.now();
   next();
 });
 
 // Hash password before saving
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function (next) {
   if (this.isModified('password')) {
     this.password = await bcrypt.hash(this.password, 10);
   }
@@ -86,24 +110,24 @@ userSchema.pre('save', async function(next) {
 });
 
 // Instance methods
-userSchema.methods.isAdmin = function() {
+userSchema.methods.isAdmin = function () {
   return this.role === 'admin';
 };
 
-userSchema.methods.hasPermission = function(permission) {
+userSchema.methods.hasPermission = function (permission) {
   return this.permissions?.includes(permission);
 };
 
-userSchema.methods.comparePassword = async function(candidatePassword) {
+userSchema.methods.comparePassword = async function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
 
 // Static methods
-userSchema.statics.findActiveCustomers = function() {
+userSchema.statics.findActiveCustomers = function () {
   return this.find({ role: 'customer', status: 'active' });
 };
 
-userSchema.statics.findAdmins = function() {
+userSchema.statics.findAdmins = function () {
   return this.find({ role: 'admin' });
 };
 const User = mongoose.model('User', userSchema);

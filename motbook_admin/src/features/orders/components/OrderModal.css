@@ -1,0 +1,29 @@
+.order-details {
+  padding: 16px;
+}
+
+.order-info {
+  margin-bottom: 24px;
+}
+
+.order-items {
+  margin-bottom: 24px;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.status-update {
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.status-update label {
+  margin-right: 16px;
+  font-weight: 500;
+}
