@@ -7,9 +7,11 @@ const {
 	updateBook,
 	deleteBook,
 	getBookById,
+	searchBooks,
 } = require('../controllers/bookController');
 
 router.get('/all', getAllBooks);
+router.get('/search', searchBooks);
 router.post('/upload', authenticateToken, uploadBook);
 router.get('/', getAllBooks);
 router.patch('/:id', authenticateToken, updateBook);

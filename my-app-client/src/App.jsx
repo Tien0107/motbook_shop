@@ -1,7 +1,7 @@
 import './App.css'
 import { Outlet } from 'react-router-dom'
 import Navbar from './Components/Navbar'
-import MyFooter from './homes/MyFooter'
+import MyFooter from './pages/homes/MyFooter'
 
 function App() {
 
