@@ -14,7 +14,7 @@ const adminRoutes = require('./routes/admin');
 const uploadRoutes = require('./routes/upload');
 const profileRoutes = require('./routes/profile');
 const debugMiddleware = require('./middleware/debugMiddleware');
-
+const cartRoutes = require('./routes/cart');
 dotenv.config();
 const app = express();
 
@@ -41,7 +41,7 @@ app.use('/api/admin', adminRoutes); // Requires admin role
 app.use('/api/customers', customerRoutes); // Requires admin role
 app.use('/api/analytics', analyticsRoutes); // Requires admin role
 app.use('/api/upload', uploadRoutes); // Requires authentication
-
+app.use('/api/cart', cartRoutes);
 // Route gốc
 app.get('/', (req, res) => {
 	res.send('Hello World');
