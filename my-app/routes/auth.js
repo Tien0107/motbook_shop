@@ -1,17 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const { signup, login, logout } = require('../controllers/authController');
+const {
+	signup,
+	login,
+	logout,
+	refreshToken,
+} = require('../controllers/authController');
 
-router.post('/signup', async (req, res) => {
-  const client = req.app.locals.db;
-  await signup(req, res, client);
-});
-
-router.post('/login', async (req, res) => {
-  const client = req.app.locals.db;
-  await login(req, res, client);
-});
-
+router.post('/register', signup);
+router.post('/login', login);
 router.post('/logout', logout);
+router.post('/refresh-token', refreshToken);
 
 module.exports = router;

@@ -5,7 +5,10 @@ import { Link } from 'react-router-dom';
 const ManageBooks = () => {
   const [allBooks, setAllBooks] = useState([])
   useEffect(() => {
-    fetch("http://localhost:3000/all-books").then(res => res.json()).then(data => setAllBooks(data))
+    fetch("http://localhost:3000/api/books").then(res => res.json()).then(data => {
+      console.log(`data`, data);
+      setAllBooks(data.data)
+    })
   },[])
   const handleDelete = (id) => {
     console.log(id);
@@ -30,29 +33,29 @@ const ManageBooks = () => {
           </Table.HeadCell>
         </Table.Head>
         {
-          allBooks.map((book,index) => <Table.Body className='divide-y' hey={book.id}>
-<Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-              {index + 1}
-            </Table.Cell>
-            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-              {book.book_title}
-            </Table.Cell>
-            <Table.Cell>{book.authorName}</Table.Cell>
-            <Table.Cell>{book.category}</Table.Cell>
-            <Table.Cell>$2999</Table.Cell>
-            <Table.Cell>
-            <Link className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 mr-5" to={
-                `/admin/dashboard/edit-books/${book._id}`
-              }>
-                Edit
-              </Link>
-              <button className='bg-red-600 px-4 py-1 font-semibold text-white rounded-sm hover:bg-sky-600' onClick={() => handleDelete(book._id)}>Delete</button>
-            </Table.Cell>
-          </Table.Row>
-
-            
-          </Table.Body>)
+          allBooks.map((book,index) => (
+            <Table.Row key={index} className="bg-white dark:border-gray-700 dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                {index + 1}
+              </Table.Cell>
+              <Table.Cell>
+                {book.book_title}
+              </Table.Cell>
+              <Table.Cell>
+                {book.author_name}
+              </Table.Cell>
+              <Table.Cell>
+                {book.category}
+              </Table.Cell>
+              <Table.Cell>
+                {book.price}
+              </Table.Cell>
+              <Table.Cell className='flex gap-4'>
+                <Link to={`/update/${book.id}`} className='bg-blue-700 text-white px-4 py-2 rounded'>Edit</Link>
+                <button onClick={() => handleDelete(book.id)} className='bg-red-700 text-white px-4 py-2 rounded'>Delete</button>
+              </Table.Cell>
+            </Table.Row>
+          ))
         }
         
       </Table>
