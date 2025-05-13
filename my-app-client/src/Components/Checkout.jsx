@@ -1,7 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'; // ✅ thêm import này
 import useAuthStore from '../features/auth/stores/authStore';
 
 const Checkout = () => {
+    const navigate = useNavigate(); // ✅ khởi tạo navigate
     const { user } = useAuthStore();
     const [formData, setFormData] = React.useState({
         fullName: user?.displayName || '',
@@ -12,11 +14,18 @@ const Checkout = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Handle checkout logic here
+        // Handle checkout logic here (gọi API nếu cần)
+
+        console.log('Form submitted:', formData); // bạn có thể xoá hoặc thay bằng API call
+
+        // ✅ Điều hướng về trang chủ sau khi xác nhận
+        navigate('/');
     };
 
     return (
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <br />
+            <br />
             <h2 className="text-3xl font-bold mb-8">Thanh toán</h2>
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div>

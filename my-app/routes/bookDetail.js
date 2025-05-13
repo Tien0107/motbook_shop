@@ -1,10 +1,22 @@
-router.get('/api/books/:id', async (req, res) => {
-  try {
-    const book = await Book.findById(req.params.id);
-    if (!book) return res.status(404).send("Not found");
-    res.json(book);
-  } catch (err) {
-    console.error(err); // In ra lỗi phía backend để kiểm tra
-    res.status(500).send("Server error");
-  }
-});
+const express = require('express');
+const router = express.Router();
+const {
+  uploadBook,
+  getAllBooks,
+  updateBook,
+  deleteBook,
+  getBookById,
+  searchBooks
+} = require('../controllers/bookController');
+
+// Public
+router.get('/', getAllBooks);
+router.get('/search', searchBooks);
+router.get('/:id', getBookById); // ✅ Sửa lại đúng theo yêu cầu
+
+// Admin
+router.post('/', uploadBook);
+router.put('/:id', updateBook);
+router.delete('/:id', deleteBook);
+
+module.exports = router;
