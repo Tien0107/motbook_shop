@@ -18,6 +18,26 @@ const getAllBooks = async (req, res) => {
   }
 };
 
+const searchBooks = async (req, res) => {
+  try {
+    const { query } = req.query;
+    if (!query) {
+      return sendError(res, 'Query parameter is required', 400);
+    }
+
+    const books = await Book.find({
+      $or: [
+        { title: { $regex: query, $options: 'i' } },
+        { author: { $regex: query, $options: 'i' } },
+        { description: { $regex: query, $options: 'i' } },
+      ],
+    });
+
+    return sendSuccess(res, books);
+  } catch (error) {
+    return sendError(res, 'Error searching books');
+  }
+};
 const getBookById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -184,4 +204,4 @@ const deleteBook = async (req, res) => {
   }
 };
 
-module.exports = { uploadBook, getAllBooks, updateBook, deleteBook, getBookById };
+module.exports = { uploadBook, getAllBooks, updateBook, deleteBook, getBookById , searchBooks };
