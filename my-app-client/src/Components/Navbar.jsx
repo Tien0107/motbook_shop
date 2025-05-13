@@ -49,7 +49,8 @@ const Navbar = () => {
     { link: "Home", path: '/' },
     { link: "About", path: '/about' },
     { link: "Shop", path: '/shop' },
-    { link: "Cart", path: '/cart' },  // Thêm Cart
+    { link: "Deals", path: '/deals' },
+    { link: "Cart", path: '/cart' },
     { link: "Sell Your Book", path: '/admin/dashboard' },
     { link: "Blog", path: '/blog' }
   ]
